@@ -2338,11 +2338,11 @@ function calcBMIandBSA() {
                 <div class="ckm-grid">
                     <div class="ckm-form-group">
                         <label for="ckm-age">Age (years)</label>
-                        <input type="number" id="ckm-age" placeholder="18–79" min="18" max="79">
+                        <input type="number" id="ckm-age" placeholder="18–79" min="18" max="79" oninput="calculateCKM()">
                     </div>
                     <div class="ckm-form-group">
                         <label for="ckm-sex">Sex</label>
-                        <select id="ckm-sex">
+                        <select id="ckm-sex" onchange="calculateCKM()">
                             <option value="">Select…</option>
                             <option value="male">Male</option>
                             <option value="female">Female</option>
@@ -2350,14 +2350,14 @@ function calcBMIandBSA() {
                     </div>
                     <div class="ckm-form-group">
                         <label for="ckm-race">Race</label>
-                        <select id="ckm-race">
+                        <select id="ckm-race" onchange="calculateCKM()">
                             <option value="white">White</option>
                             <option value="black">African American</option>
                             <option value="other">Other</option>
                         </select>
                     </div>
                     <div class="ckm-cb-item" style="align-self:center;">
-                        <input type="checkbox" id="ckm-asian">
+                        <input type="checkbox" id="ckm-asian" onchange="calculateCKM()">
                         <label for="ckm-asian" style="font-weight:normal;cursor:pointer;font-size:0.85rem;">Asian ancestry (adjusts BMI/waist cut-offs)</label>
                     </div>
                 </div>
@@ -2368,23 +2368,23 @@ function calcBMIandBSA() {
                 <div class="ckm-grid">
                     <div class="ckm-form-group">
                         <label for="ckm-height">Height <span>(cm)</span></label>
-                        <input type="number" id="ckm-height" placeholder="175">
+                        <input type="number" id="ckm-height" placeholder="175" oninput="calculateCKM()">
                     </div>
                     <div class="ckm-form-group">
                         <label for="ckm-weight">Weight <span>(kg)</span></label>
-                        <input type="number" id="ckm-weight" placeholder="80">
+                        <input type="number" id="ckm-weight" placeholder="80" oninput="calculateCKM()">
                     </div>
                     <div class="ckm-form-group">
                         <label for="ckm-waist">Waist <span>(cm)</span></label>
-                        <input type="number" id="ckm-waist" placeholder="95">
+                        <input type="number" id="ckm-waist" placeholder="95" oninput="calculateCKM()">
                     </div>
                     <div class="ckm-form-group">
                         <label for="ckm-sbp">Systolic BP <span>(mmHg)</span></label>
-                        <input type="number" id="ckm-sbp" placeholder="120">
+                        <input type="number" id="ckm-sbp" placeholder="120" oninput="calculateCKM()">
                     </div>
                     <div class="ckm-form-group">
                         <label for="ckm-dbp">Diastolic BP <span>(mmHg)</span></label>
-                        <input type="number" id="ckm-dbp" placeholder="80">
+                        <input type="number" id="ckm-dbp" placeholder="80" oninput="calculateCKM()">
                     </div>
                 </div>
             </div>
@@ -2394,31 +2394,31 @@ function calcBMIandBSA() {
                 <div class="ckm-grid">
                     <div class="ckm-form-group">
                         <label for="ckm-glucose">Fasting Glucose <span>(mmol/L)</span></label>
-                        <input type="number" id="ckm-glucose" step="0.1" placeholder="5.5">
+                        <input type="number" id="ckm-glucose" step="0.1" placeholder="5.5" oninput="calculateCKM()">
                     </div>
                     <div class="ckm-form-group">
                         <label for="ckm-hba1c">HbA1c <span>(%)</span></label>
-                        <input type="number" id="ckm-hba1c" step="0.1" placeholder="5.5">
+                        <input type="number" id="ckm-hba1c" step="0.1" placeholder="5.5" oninput="calculateCKM()">
                     </div>
                     <div class="ckm-form-group">
                         <label for="ckm-tg">Triglycerides <span>(mmol/L)</span></label>
-                        <input type="number" id="ckm-tg" step="0.1" placeholder="1.7">
+                        <input type="number" id="ckm-tg" step="0.1" placeholder="1.7" oninput="calculateCKM()">
                     </div>
                     <div class="ckm-form-group">
                         <label for="ckm-hdl">HDL Cholesterol <span>(mmol/L)</span></label>
-                        <input type="number" id="ckm-hdl" step="0.01" placeholder="1.3">
+                        <input type="number" id="ckm-hdl" step="0.01" placeholder="1.3" oninput="calculateCKM()">
                     </div>
                     <div class="ckm-form-group">
                         <label for="ckm-chol">Total Cholesterol <span>(mmol/L)</span></label>
-                        <input type="number" id="ckm-chol" step="0.1" placeholder="5.0">
+                        <input type="number" id="ckm-chol" step="0.1" placeholder="5.0" oninput="calculateCKM()">
                     </div>
                     <div class="ckm-form-group">
                         <label for="ckm-creat">Serum Creatinine <span>(µmol/L)</span></label>
-                        <input type="number" id="ckm-creat" step="1" placeholder="88">
+                        <input type="number" id="ckm-creat" step="1" placeholder="88" oninput="calculateCKM()">
                     </div>
                     <div class="ckm-form-group">
                         <label for="ckm-acr">Urine ACR <span>(mg/g)</span></label>
-                        <input type="number" id="ckm-acr" placeholder="10">
+                        <input type="number" id="ckm-acr" placeholder="10" oninput="calculateCKM()">
                     </div>
                 </div>
             </div>
@@ -2428,33 +2428,33 @@ function calcBMIandBSA() {
                 <div class="ckm-grid" style="margin-bottom:10px;">
                     <div class="ckm-form-group">
                         <label for="ckm-smoking">Smoking Status</label>
-                        <select id="ckm-smoking">
+                        <select id="ckm-smoking" onchange="calculateCKM()">
                             <option value="never">Never</option>
                             <option value="former">Former</option>
                             <option value="current">Current</option>
                         </select>
                     </div>
                     <div class="ckm-cb-item">
-                        <input type="checkbox" id="ckm-bpmeds">
+                        <input type="checkbox" id="ckm-bpmeds" onchange="calculateCKM()">
                         <label for="ckm-bpmeds" style="font-weight:normal;cursor:pointer;font-size:0.85rem;">On BP medication</label>
                     </div>
                     <div class="ckm-cb-item">
-                        <input type="checkbox" id="ckm-lipids">
+                        <input type="checkbox" id="ckm-lipids" onchange="calculateCKM()">
                         <label for="ckm-lipids" style="font-weight:normal;cursor:pointer;font-size:0.85rem;">On lipid-lowering meds</label>
                     </div>
                 </div>
                 <div class="ckm-history-grid">
-                    <div class="ckm-cb-item"><input type="checkbox" id="ckm-dm"><label for="ckm-dm" style="cursor:pointer;">Diabetes Mellitus</label></div>
-                    <div class="ckm-cb-item"><input type="checkbox" id="ckm-htn"><label for="ckm-htn" style="cursor:pointer;">Hypertension</label></div>
-                    <div class="ckm-cb-item"><input type="checkbox" id="ckm-chd"><label for="ckm-chd" style="cursor:pointer;">Coronary Artery Disease</label></div>
-                    <div class="ckm-cb-item"><input type="checkbox" id="ckm-hf"><label for="ckm-hf" style="cursor:pointer;">Heart Failure</label></div>
-                    <div class="ckm-cb-item"><input type="checkbox" id="ckm-stroke"><label for="ckm-stroke" style="cursor:pointer;">Stroke</label></div>
-                    <div class="ckm-cb-item"><input type="checkbox" id="ckm-pad"><label for="ckm-pad" style="cursor:pointer;">Peripheral Arterial Disease</label></div>
-                    <div class="ckm-cb-item"><input type="checkbox" id="ckm-afib"><label for="ckm-afib" style="cursor:pointer;">Atrial Fibrillation</label></div>
+                    <div class="ckm-cb-item"><input type="checkbox" id="ckm-dm" onchange="calculateCKM()"><label for="ckm-dm" style="cursor:pointer;">Diabetes Mellitus</label></div>
+                    <div class="ckm-cb-item"><input type="checkbox" id="ckm-htn" onchange="calculateCKM()"><label for="ckm-htn" style="cursor:pointer;">Hypertension</label></div>
+                    <div class="ckm-cb-item"><input type="checkbox" id="ckm-chd" onchange="calculateCKM()"><label for="ckm-chd" style="cursor:pointer;">Coronary Artery Disease</label></div>
+                    <div class="ckm-cb-item"><input type="checkbox" id="ckm-hf" onchange="calculateCKM()"><label for="ckm-hf" style="cursor:pointer;">Heart Failure</label></div>
+                    <div class="ckm-cb-item"><input type="checkbox" id="ckm-stroke" onchange="calculateCKM()"><label for="ckm-stroke" style="cursor:pointer;">Stroke</label></div>
+                    <div class="ckm-cb-item"><input type="checkbox" id="ckm-pad" onchange="calculateCKM()"><label for="ckm-pad" style="cursor:pointer;">Peripheral Arterial Disease</label></div>
+                    <div class="ckm-cb-item"><input type="checkbox" id="ckm-afib" onchange="calculateCKM()"><label for="ckm-afib" style="cursor:pointer;">Atrial Fibrillation</label></div>
                 </div>
                 <div class="input-group" style="margin-top:12px;">
                     <label>CAC Score (Agatston) <span class="info-text">— &gt;0 indicates subclinical CVD (Stage 3)</span></label>
-                    <input type="number" id="ckm-cac" placeholder="e.g. 0">
+                    <input type="number" id="ckm-cac" placeholder="e.g. 0" oninput="calculateCKM()">
                 </div>
             </div>
 
