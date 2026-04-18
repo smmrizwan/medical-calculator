@@ -11,7 +11,7 @@ This repository contains a collection of clinical medical calculators designed f
 **Reference:** DuBois D, DuBois EF. Arch Intern Med. 1916;17:863-871 (and others depending on formula)
 
 ### Blood Pressure Staging
-**Reference:** ACC/AHA 2017 High Blood Pressure Clinical Practice Guideline
+**Reference:** ACC/AHA 2025 High Blood Pressure Guideline-at-a-Glance
 
 ### eGFR Calculator (CKD-EPI 2021)
 **Reference:** Inker LA, et al. N Engl J Med. 2021;385(19):1737-1749
