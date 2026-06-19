@@ -315,6 +315,81 @@
         .fac-hi { color:#d9534f; font-weight:700; }
         .ref-note { font-size:0.72rem; color:#a0aec0; margin-top:8px; font-style:italic; }
 
+        /* eGFR Slope Calculator styles */
+        .slope-unit-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding: 10px;
+            background: #edf2f7;
+            border-radius: 6px;
+        }
+        .slope-unit-toggle span { font-weight: 600; font-size: 0.9rem; color: #4a5568; }
+        .slope-unit-toggle label { font-weight: normal; cursor: pointer; margin: 0; display: flex; align-items: center; gap: 6px; }
+        .slope-unit-toggle input[type=radio] { width: auto; }
+        .slope-canvas-container {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            margin-top: 20px;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
+        .slope-canvas-container canvas { width: 100%; height: 100%; }
+        .slope-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .slope-summary-box {
+            background: #edf2f7;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .slope-summary-val {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #5a67d8;
+        }
+        .slope-summary-lbl {
+            font-size: 0.75rem;
+            color: #718096;
+            margin-top: 4px;
+        }
+        .slope-interpretation {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 4px solid #5a67d8;
+            background: #f7fafc;
+            font-size: 0.9rem;
+        }
+        .slope-interpretation.stable { border-color: #48bb78; background: #f0fff4; color: #276749; }
+        .slope-interpretation.slow { border-color: #ed8936; background: #fffaf0; color: #7c2d12; }
+        .slope-interpretation.rapid { border-color: #f56565; background: #fff5f5; color: #9b2c2c; }
+        .slope-interpretation.recovery { border-color: #4299e1; background: #ebf8ff; color: #2a4365; }
+        .slope-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .slope-table th, .slope-table td { padding: 8px 10px; text-align: center; border-bottom: 1px solid #e2e8f0; font-size: 0.9rem; }
+        .slope-table thead tr { background: #2d3748; color: white; }
+        .slope-table tbody tr:nth-child(even) { background: #f7fafc; }
+        .slope-table input[type=number], .slope-table select { width: 100%; padding: 6px; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 14px; text-align: center; }
+        .slope-table .egfr-cell { font-weight: 600; color: #5a67d8; min-width: 80px; }
+        .slope-points-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #718096;
+        }
+        .slope-points-legend span { display: flex; align-items: center; gap: 4px; }
+        .slope-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
     </style>
 </head>
 <body>
@@ -1141,6 +1216,55 @@ function calcBMIandBSA() {
                 </div>
             </div>
 
+            <!-- Traditional / Albumin-Adjusted / Full Anion Gap Calculator -->
+            <div class="calculator">
+                <h2>Anion Gap (Traditional, Albumin-Adjusted & Full)</h2>
+                <div class="two-col">
+                    <div class="input-group">
+                        <label for="ag-na">Sodium (Na⁺, mEq/L)</label>
+                        <input type="number" id="ag-na" step="0.1" oninput="calculateFullAnionGap()">
+                    </div>
+                    <div class="input-group">
+                        <label for="ag-cl">Chloride (Cl⁻, mEq/L)</label>
+                        <input type="number" id="ag-cl" step="0.1" oninput="calculateFullAnionGap()">
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="input-group">
+                        <label for="ag-hco3">Bicarbonate (HCO₃⁻, mEq/L)</label>
+                        <input type="number" id="ag-hco3" step="0.1" oninput="calculateFullAnionGap()">
+                    </div>
+                    <div class="input-group">
+                        <label for="ag-alb">Albumin (g/L) <span class="info-text">(optional; for albumin-adjusted AG)</span></label>
+                        <input type="number" id="ag-alb" step="0.1" oninput="calculateFullAnionGap()">
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="input-group">
+                        <label for="ag-k">Potassium (K⁺, mEq/L) <span class="info-text">(optional; for full AG)</span></label>
+                        <input type="number" id="ag-k" step="0.1" oninput="calculateFullAnionGap()">
+                    </div>
+                    <div class="input-group">
+                        <label for="ag-ca">Ionized Calcium (mEq/L) <span class="info-text">(optional; for full AG)</span></label>
+                        <input type="number" id="ag-ca" step="0.01" oninput="calculateFullAnionGap()">
+                    </div>
+                </div>
+                <div class="two-col">
+                    <div class="input-group">
+                        <label for="ag-phos">Phosphate (mEq/L) <span class="info-text">(optional; for full AG)</span></label>
+                        <input type="number" id="ag-phos" step="0.01" oninput="calculateFullAnionGap()">
+                    </div>
+                    <div class="input-group"></div>
+                </div>
+                <div class="result" id="ag-result"></div>
+                <div class="info-text">
+                    <strong>Formulas:</strong><br>
+                    • <strong>Traditional AG</strong> = Na⁺ − (Cl⁻ + HCO₃⁻)<br>
+                    • <strong>Albumin-Adjusted AG (aAG)</strong> = Traditional AG − (0.25 × Albumin [g/L])<br>
+                    • <strong>Full AG</strong> = aAG + K⁺ + ionized Ca²⁺ − Phosphate
+                </div>
+            </div>
+
             <!-- Anion Gap Delta-Delta Calculator -->
             <div class="calculator">
                 <h2>Anion Gap & Delta-Delta Calculator</h2>
@@ -1160,7 +1284,7 @@ function calcBMIandBSA() {
                         <input type="number" id="dd-hco3" step="0.1" oninput="calculateDeltaDelta()">
                     </div>
                     <div class="input-group">
-                        <label for="dd-alb">Albumin (g/dL) <span class="info-text">(optional; for albumin correction)</span></label>
+                        <label for="dd-alb">Albumin (g/L) <span class="info-text">(optional; for albumin correction)</span></label>
                         <input type="number" id="dd-alb" step="0.1" oninput="calculateDeltaDelta()">
                     </div>
                 </div>
@@ -2483,6 +2607,595 @@ function calcBMIandBSA() {
             <div class="ref-note">Ndumele CE et al. Circulation. 2023;148:1636–1664 · Ma N et al. JACC Adv. 2026;5:102664 · ACC/AHA PCE Guidelines</div>
         </div>
 
+            <!-- KPNW Model — 5-Year RRT Risk (CKD Stage 3-4) -->
+            <div class="calculator">
+                <h2>KPNW Model — 5-Year RRT Risk (CKD Stage 3-4)</h2>
+                <p class="info-text" style="margin-bottom:12px;">Predicts 5-year risk of renal replacement therapy using the exact Cox model from Schroeder et al. (CJASN 2017).</p>
+
+                <div class="two-col">
+                    <div class="input-group">
+                        <label for="kpnw-egfr">eGFR (mL/min/1.73m&sup2;) <span style="color:#f56565">*</span></label>
+                        <input type="number" id="kpnw-egfr" placeholder="15-59" min="15" max="59" step="0.1" oninput="calculateKPNW()">
+                        <span class="info-text" id="kpnw-egfr-pts"></span>
+                    </div>
+                    <div class="input-group">
+                        <label for="kpnw-age">Age (years) <span style="color:#f56565">*</span></label>
+                        <input type="number" id="kpnw-age" placeholder="30-89" min="30" max="89" step="1" oninput="calculateKPNW()">
+                        <span class="info-text" id="kpnw-age-pts"></span>
+                    </div>
+                </div>
+
+                <div class="two-col">
+                    <div class="input-group">
+                        <label for="kpnw-sex">Sex <span style="color:#f56565">*</span></label>
+                        <select id="kpnw-sex" onchange="calculateKPNW()">
+                            <option value="">Select...</option>
+                            <option value="0">Female</option>
+                            <option value="1">Male (+10 pts)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="kpnw-hgb">Hemoglobin (g/dL) <span style="color:#f56565">*</span></label>
+                        <input type="number" id="kpnw-hgb" placeholder="Enter value" min="4" max="20" step="0.1" oninput="calculateKPNW()">
+                        <span class="info-text" id="kpnw-hgb-pts"></span>
+                    </div>
+                </div>
+
+                <div class="two-col">
+                    <div class="input-group">
+                        <label for="kpnw-sbp">Systolic BP (mmHg) <span style="color:#f56565">*</span></label>
+                        <input type="number" id="kpnw-sbp" placeholder="Enter value" min="70" max="220" step="1" oninput="calculateKPNW()">
+                        <span class="info-text" id="kpnw-sbp-pts"></span>
+                    </div>
+                    <div class="input-group">
+                        <label for="kpnw-diabetes">Diabetes Status <span style="color:#f56565">*</span></label>
+                        <select id="kpnw-diabetes" onchange="calculateKPNW()">
+                            <option value="">Select...</option>
+                            <option value="0">No diabetes (0 pts)</option>
+                            <option value="1">Diabetes, no complications (+1 pt)</option>
+                            <option value="2">Diabetes, 1 complication (+7 pts)</option>
+                            <option value="3">Diabetes, 2 complications (+7 pts)</option>
+                            <option value="4">Diabetes, 3+ complications (+10 pts)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="two-col">
+                    <div class="input-group">
+                        <label for="kpnw-proteinuria">Proteinuria/Albuminuria <span style="color:#f56565">*</span></label>
+                        <select id="kpnw-proteinuria" onchange="calculateKPNW()">
+                            <option value="">Select...</option>
+                            <option value="0">No (0 pts)</option>
+                            <option value="1">Yes (+7 pts)</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="kpnw-htnmed">Antihypertensive Medication <span style="color:#f56565">*</span></label>
+                        <select id="kpnw-htnmed" onchange="calculateKPNW()">
+                            <option value="">Select...</option>
+                            <option value="0">No (0 pts)</option>
+                            <option value="1">Yes (+6 pts)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="result" id="kpnw-result"></div>
+
+                <div class="info-text" style="margin-top:12px;">
+                    <strong>Risk thresholds (Supplemental Table 2):</strong><br>
+                    &ge;70 pts → &gt;1% risk | &ge;95 pts → &gt;5% | &ge;106 pts → &gt;10% | &ge;117 pts → &gt;20% | &ge;135 pts → &gt;50%<br>
+                    <em>Ref: Schroeder EB et al. CJASN 2017;12:87-94. c-statistic 0.96 (dev), 0.95 (val).</em>
+                </div>
+            </div>
+			<!-- Official KDpredict Wrapper -->
+<div class="calculator">
+    <h2>KDpredict — Kidney Failure & Mortality Risk (Official)</h2>
+
+    <div class="info-text" style="margin-bottom:10px;">
+        Official KDpredict calculator for adults with CKD G3b–G4.
+        Use this instead of the local reconstructed KDpredict formula.
+    </div>
+
+    <iframe
+        src="https://kdpredict.com/"
+        title="Official KDpredict Calculator"
+        style="
+            width: 100%;
+            height: 1050px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: white;
+        "
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        sandbox="allow-forms allow-scripts allow-same-origin allow-popups">
+    </iframe>
+
+    <div class="info-text" style="margin-top:10px;">
+        If the calculator does not load inside this page,
+        <a href="https://kdpredict.com/" target="_blank" rel="noopener noreferrer">
+            open the official KDpredict calculator
+        </a>.
+    </div>
+</div>
+
+                        <!-- Drawz et al., 2013 — VA Risk Score -->
+            <div class="calculator">
+                <h2>Drawz et al., 2013 — VA Risk Score</h2>
+                <p class="info-text" style="margin-bottom:12px;">
+                    Predicts 1-year ESRD risk in elderly adults (≥65y) with advanced CKD (eGFR &lt;30).
+                </p>
+
+                <div class="two-col">
+                    <div class="input-group">
+                        <label for="drawz-egfr">eGFR (mL/min/1.73m²)</label>
+                        <input type="number" id="drawz-egfr" step="0.1" placeholder="e.g., 25" oninput="calculateDrawzVA()">
+                    </div>
+                    <div class="input-group">
+                        <label for="drawz-chf">Congestive Heart Failure (CHF)</label>
+                        <select id="drawz-chf" onchange="calculateDrawzVA()">
+                            <option value="0" selected>No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="two-col">
+                    <div class="input-group">
+                        <label for="drawz-age">Age (years)</label>
+                        <input type="number" id="drawz-age" step="1" placeholder="e.g., 75" oninput="calculateDrawzVA()">
+                    </div>
+                    <div class="input-group">
+                        <label for="drawz-albumin">Serum Albumin (g/dL)</label>
+                        <input type="number" id="drawz-albumin" step="0.1" placeholder="e.g., 3.5" oninput="calculateDrawzVA()">
+                    </div>
+                </div>
+
+                <div class="two-col">
+                    <div class="input-group">
+                        <label for="drawz-potassium">Serum Potassium (mEq/L)</label>
+                        <input type="number" id="drawz-potassium" step="0.1" placeholder="e.g., 4.5" oninput="calculateDrawzVA()">
+                    </div>
+                    <div class="input-group">
+                        <label for="drawz-sbp">Average Systolic BP (mmHg) <span class="info-text">(average of last 5 measurements)</span></label>
+                        <input type="number" id="drawz-sbp" step="1" placeholder="e.g., 140" oninput="calculateDrawzVA()">
+                    </div>
+                </div>
+
+                <div class="result" id="drawz-result"></div>
+
+                <div class="info-text" style="margin-top:12px;">
+                    <strong>Risk thresholds:</strong> &lt;0.7% = Low (lowest tertile) | 0.7–2.9% = Moderate (middle tertile) | &gt;2.9–5.6% = High (highest tertile) | &gt;5.6% = Very high (top quintile, observed risk 14%)<br>
+                    <em>Ref: Drawz PE, et al. J Am Geriatr Soc 2013;61:762-8. Serum albumin in g/dL, potassium in mEq/L.</em>
+                </div>
+            </div>
+
+            <!-- Marks et al., 2015 — RRT Prediction -->
+            <div class="calculator">
+                <h2>Marks et al., 2015 — RRT Prediction</h2>
+                <p class="info-text" style="margin-bottom:12px;">
+                    Predicts 5-year risk of initiating renal replacement therapy in community CKD (stage 3b–5).
+                </p>
+
+                <div class="two-col">
+                    <div class="input-group">
+                        <label for="marks-sex">Sex</label>
+                        <select id="marks-sex" onchange="calculateMarksRRT()">
+                            <option value="" disabled selected>Select sex</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="marks-age">Age (years)</label>
+                        <input type="number" id="marks-age" step="1" placeholder="e.g., 70" oninput="calculateMarksRRT()">
+                    </div>
+                </div>
+
+                <div class="two-col">
+                    <div class="input-group">
+                        <label for="marks-egfr">eGFR (mL/min/1.73m²)</label>
+                        <input type="number" id="marks-egfr" step="0.1" placeholder="e.g., 30" oninput="calculateMarksRRT()">
+                    </div>
+                    <div class="input-group">
+                        <label for="marks-albuminuria">Albuminuria Status</label>
+                        <select id="marks-albuminuria" onchange="calculateMarksRRT()">
+                            <option value="" disabled selected>Select status</option>
+                            <option value="normo">Normoalbuminuric</option>
+                            <option value="unknown">Not known</option>
+                            <option value="micro">Microalbuminuric</option>
+                            <option value="macro">Macroalbuminuric</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="result" id="marks-result"></div>
+
+                <div class="info-text" style="margin-top:12px;">
+                    <strong>Risk categories:</strong> &lt;1% = Low | 1–5% = Moderate | 5–10% = High | ≥10% = Very high<br>
+                    Sex = 1 if male, 2 if female.<br>
+                    <em>Ref: Marks A, et al. Nephrol Dial Transplant 2015;30:1507-17.</em>
+                </div>
+            </div>
+
+            <!-- Johnson et al., 2008 — Points-Based Risk Score -->
+            <div class="calculator">
+                <h2>Johnson et al., 2008 — Points-Based Risk Score</h2>
+                <p class="info-text" style="margin-bottom:12px;">
+                    Points-based system predicting 5-year RRT risk in stage 3–4 CKD. C-statistic 0.89. Higher score = higher predicted risk.
+                </p>
+
+                <div class="two-col">
+                    <div class="input-group">
+                        <label for="johnson-age">Age (years)</label>
+                        <select id="johnson-age" onchange="calculateJohnsonRisk()">
+                            <option value="" disabled selected>Select range</option>
+                            <option value="30-34">30–34</option>
+                            <option value="35-39">35–39</option>
+                            <option value="40-44">40–44</option>
+                            <option value="45-49">45–49</option>
+                            <option value="50-54">50–54</option>
+                            <option value="55-59">55–59</option>
+                            <option value="60-64">60–64</option>
+                            <option value="65-69">65–69</option>
+                            <option value="70-74">70–74</option>
+                            <option value="75-79">75–79</option>
+                            <option value="80-84">80–84</option>
+                            <option value="85-89">85–89</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="johnson-sex">Sex</label>
+                        <select id="johnson-sex" onchange="calculateJohnsonRisk()">
+                            <option value="" disabled selected>Select sex</option>
+                            <option value="female">Female</option>
+                            <option value="male">Male</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="two-col">
+                    <div class="input-group">
+                        <label for="johnson-diabetes">Diabetes</label>
+                        <select id="johnson-diabetes" onchange="calculateJohnsonRisk()">
+                            <option value="" disabled selected>Select</option>
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="johnson-hypertension">Hypertension</label>
+                        <select id="johnson-hypertension" onchange="calculateJohnsonRisk()">
+                            <option value="" disabled selected>Select</option>
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="two-col">
+                    <div class="input-group">
+                        <label for="johnson-egfr">eGFR (mL/min/1.73m²)</label>
+                        <select id="johnson-egfr" onchange="calculateJohnsonRisk()">
+                            <option value="" disabled selected>Select range</option>
+                            <option value="59-55">59–55</option>
+                            <option value="54-50">54–50</option>
+                            <option value="49-45">49–45</option>
+                            <option value="44-40">44–40</option>
+                            <option value="39-35">39–35</option>
+                            <option value="34-30">34–30</option>
+                            <option value="29-25">29–25</option>
+                            <option value="24-20">24–20</option>
+                            <option value="19-15">19–15</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="johnson-anemia">Anemia</label>
+                        <select id="johnson-anemia" onchange="calculateJohnsonRisk()">
+                            <option value="" disabled selected>Select</option>
+                            <option value="no">No</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="result" id="johnson-result"></div>
+
+                <div class="info-text" style="margin-top:12px;">
+                    <strong>Risk thresholds:</strong> ≥98 pts → ≥1% risk | ≥131 pts → ≥5% | ≥146 pts → ≥10% | ≥159 pts → ≥15% | ≥165 pts → ≥20%<br>
+                    <em>Ref: Johnson ES, et al. Am J Kidney Dis 2008;52:653-60.</em>
+                </div>
+            </div>
+
+            <!-- Grams et al., 2018 — CKD Outcomes Predictor Wrapper -->
+            <div class="calculator">
+                <h2>Grams et al., 2018 — CKD Outcomes Predictor (Official)</h2>
+
+                <div class="info-text" style="margin-bottom:10px;">
+                    Official web calculator for predicting timing of kidney replacement therapy (KRT), cardiovascular events, and death in patients with severely decreased GFR (eGFR &lt;30 mL/min/1.73m²). Uses a 5-state Markov process with competing-risk regression.
+                </div>
+
+                <iframe
+                    src="https://ckdpcrisk.org/lowgfrevents/"
+                    title="Official CKD Outcomes Predictor"
+                    style="width: 100%; height: 1050px; border: 1px solid #e2e8f0; border-radius: 10px; background: white;"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    sandbox="allow-forms allow-scripts allow-same-origin allow-popups">
+                </iframe>
+
+                <div class="info-text" style="margin-top:10px;">
+                    If the calculator does not load inside this page,
+                    <a href="https://ckdpcrisk.org/lowgfrevents/" target="_blank" rel="noopener noreferrer">open the official calculator</a>.
+                </div>
+            </div>
+
+<!-- eGFR Slope Calculator -->
+            <div class="calculator" style="grid-column: 1 / -1;">
+                <h2>eGFR Slope Calculator</h2>
+                <p class="info-text" style="margin-bottom:12px;">
+                    Tracks changes in estimated GFR over time using linear regression. 
+                    Enter patient demographics and up to 7 creatinine values with dates to calculate the annual eGFR slope.
+                </p>
+
+                <!-- Unit Toggle -->
+                <div class="slope-unit-toggle">
+                    <span>Creatinine units:</span>
+                    <label>
+                        <input type="radio" name="slope-unit" value="mgdl" checked onchange="calculateSlope()"> mg/dL
+                    </label>
+                    <label>
+                        <input type="radio" name="slope-unit" value="umol" onchange="calculateSlope()"> &mu;mol/L
+                    </label>
+                    <span id="slope-unit-hint" style="font-size:0.8rem;color:#718096;margin-left:4px;">Using mg/dL</span>
+                </div>
+
+                <!-- Patient Demographics -->
+                <div class="two-col">
+                    <div class="input-group">
+                        <label for="slope-age">Age (years)</label>
+                        <input type="number" id="slope-age" placeholder="e.g. 55" min="18" max="120" oninput="calculateSlope()">
+                    </div>
+                    <div class="input-group">
+                        <label for="slope-gender">Gender</label>
+                        <select id="slope-gender" onchange="calculateSlope()">
+                            <option value="">Select...</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Data Entry Table -->
+                <div class="timeline-table-container">
+                    <table class="slope-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Month</th>
+                                <th>Year</th>
+                                <th>Creatinine <span id="slope-th-unit">(mg/dL)</span></th>
+                                <th>eGFR (mL/min/1.73m&sup2;)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="slope-tbody">
+                            <tr>
+                                <td style="font-weight:600;color:#718096;">1</td>
+                                <td>
+                                    <select id="slope-month-1" onchange="calculateSlope()">
+                                        <option value="">Month</option>
+<option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" id="slope-year-1" placeholder="YYYY" min="1990" max="2100" oninput="calculateSlope()">
+                                </td>
+                                <td>
+                                    <input type="number" id="slope-cr-1" placeholder="Enter value" step="0.01" min="0" oninput="calculateSlope()">
+                                </td>
+                                <td class="egfr-cell" id="slope-egfr-1">--</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:600;color:#718096;">2</td>
+                                <td>
+                                    <select id="slope-month-2" onchange="calculateSlope()">
+                                        <option value="">Month</option>
+<option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" id="slope-year-2" placeholder="YYYY" min="1990" max="2100" oninput="calculateSlope()">
+                                </td>
+                                <td>
+                                    <input type="number" id="slope-cr-2" placeholder="Enter value" step="0.01" min="0" oninput="calculateSlope()">
+                                </td>
+                                <td class="egfr-cell" id="slope-egfr-2">--</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:600;color:#718096;">3</td>
+                                <td>
+                                    <select id="slope-month-3" onchange="calculateSlope()">
+                                        <option value="">Month</option>
+<option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" id="slope-year-3" placeholder="YYYY" min="1990" max="2100" oninput="calculateSlope()">
+                                </td>
+                                <td>
+                                    <input type="number" id="slope-cr-3" placeholder="Enter value" step="0.01" min="0" oninput="calculateSlope()">
+                                </td>
+                                <td class="egfr-cell" id="slope-egfr-3">--</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:600;color:#718096;">4</td>
+                                <td>
+                                    <select id="slope-month-4" onchange="calculateSlope()">
+                                        <option value="">Month</option>
+<option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" id="slope-year-4" placeholder="YYYY" min="1990" max="2100" oninput="calculateSlope()">
+                                </td>
+                                <td>
+                                    <input type="number" id="slope-cr-4" placeholder="Enter value" step="0.01" min="0" oninput="calculateSlope()">
+                                </td>
+                                <td class="egfr-cell" id="slope-egfr-4">--</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:600;color:#718096;">5</td>
+                                <td>
+                                    <select id="slope-month-5" onchange="calculateSlope()">
+                                        <option value="">Month</option>
+<option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" id="slope-year-5" placeholder="YYYY" min="1990" max="2100" oninput="calculateSlope()">
+                                </td>
+                                <td>
+                                    <input type="number" id="slope-cr-5" placeholder="Enter value" step="0.01" min="0" oninput="calculateSlope()">
+                                </td>
+                                <td class="egfr-cell" id="slope-egfr-5">--</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:600;color:#718096;">6</td>
+                                <td>
+                                    <select id="slope-month-6" onchange="calculateSlope()">
+                                        <option value="">Month</option>
+<option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" id="slope-year-6" placeholder="YYYY" min="1990" max="2100" oninput="calculateSlope()">
+                                </td>
+                                <td>
+                                    <input type="number" id="slope-cr-6" placeholder="Enter value" step="0.01" min="0" oninput="calculateSlope()">
+                                </td>
+                                <td class="egfr-cell" id="slope-egfr-6">--</td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight:600;color:#718096;">7</td>
+                                <td>
+                                    <select id="slope-month-7" onchange="calculateSlope()">
+                                        <option value="">Month</option>
+<option value="1">January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" id="slope-year-7" placeholder="YYYY" min="1990" max="2100" oninput="calculateSlope()">
+                                </td>
+                                <td>
+                                    <input type="number" id="slope-cr-7" placeholder="Enter value" step="0.01" min="0" oninput="calculateSlope()">
+                                </td>
+                                <td class="egfr-cell" id="slope-egfr-7">--</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Chart -->
+                <div class="slope-canvas-container">
+                    <canvas id="slope-canvas"></canvas>
+                </div>
+
+                <!-- Results Summary -->
+                <div class="slope-summary-grid">
+                    <div class="slope-summary-box">
+                        <div class="slope-summary-val" id="slope-val">--</div>
+                        <div class="slope-summary-lbl">eGFR Slope<br>(mL/min/1.73m&sup2;/year)</div>
+                    </div>
+                    <div class="slope-summary-box">
+                        <div class="slope-summary-val" id="slope-r2">--</div>
+                        <div class="slope-summary-lbl">R&sup2; (Goodness of Fit)</div>
+                    </div>
+                    <div class="slope-summary-box">
+                        <div class="slope-summary-val" id="slope-n">--</div>
+                        <div class="slope-summary-lbl">Data Points Used</div>
+                    </div>
+                    <div class="slope-summary-box">
+                        <div class="slope-summary-val" id="slope-first-egfr">--</div>
+                        <div class="slope-summary-lbl">First eGFR</div>
+                    </div>
+                    <div class="slope-summary-box">
+                        <div class="slope-summary-val" id="slope-last-egfr">--</div>
+                        <div class="slope-summary-lbl">Last eGFR</div>
+                    </div>
+                </div>
+
+                <!-- Interpretation -->
+                <div id="slope-interpretation" class="slope-interpretation" style="display:none;"></div>
+
+                <!-- Legend -->
+                <div class="slope-points-legend">
+                    <strong>Legend:</strong>
+                    <span><span class="slope-dot" style="background:#48bb78;"></span> G1 (>=90)</span>
+                    <span><span class="slope-dot" style="background:#68d391;"></span> G2 (60-89)</span>
+                    <span><span class="slope-dot" style="background:#ed8936;"></span> G3a (45-59)</span>
+                    <span><span class="slope-dot" style="background:#f6ad55;"></span> G3b (30-44)</span>
+                    <span><span class="slope-dot" style="background:#f56565;"></span> G4 (15-29)</span>
+                    <span><span class="slope-dot" style="background:#9b2c2c;"></span> G5 (<15)</span>
+                </div>
+
+                <!-- Clinical Reference -->
+                <div class="info-text" style="margin-top:12px;">
+                    <strong>eGFR Slope Interpretation:</strong><br>
+                    &bull; <strong>Stable:</strong> -1 to +1 mL/min/1.73m&sup2;/year<br>
+                    &bull; <strong>Slow Decline:</strong> -1 to -3 mL/min/1.73m&sup2;/year<br>
+                    &bull; <strong>Rapid Decline:</strong> -3 to -5 mL/min/1.73m&sup2;/year<br>
+                    &bull; <strong>Very Rapid Decline:</strong> &lt; -5 mL/min/1.73m&sup2;/year<br>
+                    &bull; <strong>Recovery:</strong> &gt; +1 mL/min/1.73m&sup2;/year<br>
+                    <em>A reduction of ~0.75 mL/min/1.73m&sup2;/year is a typical target in clinical trials to slow ESKD progression.</em>
+                </div>
+            </div>
+
+            <!-- CKD-PC Risk Tools — GFR Decline Predictor -->
+            <div class="calculator">
+                <h2>CKD-PC — GFR Decline Predictor</h2>
+
+                <div class="info-text" style="margin-bottom:10px;">
+                    Official CKD Prognosis Consortium calculator for predicting the risk of a 40% GFR decline from baseline. Based on multinational cohort data with competing-risk methodology.
+                </div>
+
+                <iframe
+                    src="https://ckdpcrisk.org/gfrdecline40/"
+                    title="Official GFR Decline Predictor"
+                    style="width: 100%; height: 1050px; border: 1px solid #e2e8f0; border-radius: 10px; background: white;"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    sandbox="allow-forms allow-scripts allow-same-origin allow-popups">
+                </iframe>
+
+                <div class="info-text" style="margin-top:10px;">
+                    If the calculator does not load inside this page,
+                    <a href="https://ckdpcrisk.org/gfrdecline40/" target="_blank" rel="noopener noreferrer">open the official GFR Decline Predictor</a>.
+                </div>
+            </div>
+
+            <!-- CKD-PC Risk Tools — CKD Risk Calculator -->
+            <div class="calculator">
+                <h2>CKD-PC — CKD Risk Calculator</h2>
+
+                <div class="info-text" style="margin-bottom:10px;">
+                    Official CKD Prognosis Consortium risk calculator for predicting kidney failure, cardiovascular events, and mortality in patients with chronic kidney disease. Incorporates competing-risk regression and multinational validation cohorts.
+                </div>
+
+                <iframe
+                    src="https://ckdpcrisk.org/ckdrisk/"
+                    title="Official CKD Risk Calculator"
+                    style="width: 100%; height: 1050px; border: 1px solid #e2e8f0; border-radius: 10px; background: white;"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    sandbox="allow-forms allow-scripts allow-same-origin allow-popups">
+                </iframe>
+
+                <div class="info-text" style="margin-top:10px;">
+                    If the calculator does not load inside this page,
+                    <a href="https://ckdpcrisk.org/ckdrisk/" target="_blank" rel="noopener noreferrer">open the official CKD Risk Calculator</a>.
+                </div>
+            </div>
+
 </div>
     </div>
 
@@ -3273,6 +3986,65 @@ function calculateBPStage() {
             return lines.map(l => `<div class="result-value">${l}</div>`).join("");
         }
 
+        // Traditional / Albumin-Adjusted / Full Anion Gap Calculator
+        function calculateFullAnionGap() {
+            const na = parseFloat(document.getElementById('ag-na').value);
+            const cl = parseFloat(document.getElementById('ag-cl').value);
+            const hco3 = parseFloat(document.getElementById('ag-hco3').value);
+            const alb = parseFloat(document.getElementById('ag-alb').value);
+            const k = parseFloat(document.getElementById('ag-k').value);
+            const ca = parseFloat(document.getElementById('ag-ca').value);
+            const phos = parseFloat(document.getElementById('ag-phos').value);
+            const out = document.getElementById('ag-result');
+
+            if (!isFinite(na) || !isFinite(cl) || !isFinite(hco3)) {
+                out.innerHTML = '<div class="result-label">Enter Na⁺, Cl⁻, and HCO₃⁻ to calculate</div>';
+                return;
+            }
+
+            // Traditional AG
+            const traditionalAG = na - (cl + hco3);
+            let html = `<div class="result-value">Traditional AG: ${traditionalAG.toFixed(1)} mEq/L</div>`;
+
+            // Traditional AG status
+            let agStatus = '';
+            let agStatusClass = '';
+            if (traditionalAG < 8) {
+                agStatus = 'Low anion gap';
+                agStatusClass = 'status-warning';
+            } else if (traditionalAG <= 12) {
+                agStatus = 'Normal anion gap';
+                agStatusClass = 'status-normal';
+            } else {
+                agStatus = 'High anion gap';
+                agStatusClass = 'status-danger';
+            }
+            html += `<div class="result-label ${agStatusClass}">AG Status: ${agStatus}</div>`;
+
+            // Albumin-Adjusted AG (aAG)
+            let aAG = null;
+            if (isFinite(alb)) {
+                aAG = traditionalAG - (0.25 * alb);
+                html += `<div class="result-value">Albumin-Adjusted AG (aAG): ${aAG.toFixed(1)} mEq/L</div>`;
+            }
+
+            // Full AG (requires aAG, K, ionized Ca, and Phosphate)
+            if (aAG !== null && isFinite(k) && isFinite(ca) && isFinite(phos)) {
+                const fullAG = aAG + k + ca - phos;
+                html += `<div class="result-value">Full AG: ${fullAG.toFixed(1)} mEq/L</div>`;
+            } else if (aAG !== null) {
+                const missing = [];
+                if (!isFinite(k)) missing.push('K⁺');
+                if (!isFinite(ca)) missing.push('ionized Ca²⁺');
+                if (!isFinite(phos)) missing.push('phosphate');
+                html += `<div class="result-label">Enter ${missing.join(', ')} to calculate Full AG</div>`;
+            } else if (isFinite(k) || isFinite(ca) || isFinite(phos)) {
+                html += `<div class="result-label">Enter albumin to calculate Albumin-Adjusted and Full AG</div>`;
+            }
+
+            out.innerHTML = html;
+        }
+
         // Updated Anion Gap Delta-Delta Calculator
         function calculateDeltaDelta() {
             const na = parseFloat(document.getElementById('dd-na').value);
@@ -3291,10 +4063,10 @@ function calculateBPStage() {
             const normalAG = 12; // Normal anion gap
             const normalHCO3 = 24; // Normal bicarbonate
             
-            // Apply albumin correction if provided
+            // Apply albumin correction if provided (Albumin in g/L)
             let correctedAG = ag;
             if (isFinite(alb)) {
-                correctedAG = ag + 2.5 * (4.0 - alb);
+                correctedAG = ag - (0.25 * alb);
             }
             
             // Calculate delta values
@@ -4348,6 +5120,691 @@ function calculateBPStage() {
         // Sync unit hint on page load
         document.addEventListener('DOMContentLoaded', () => { kegfrCalc(); });
 
-    </script>
+    
+        // KPNW Model — 5-Year RRT Risk (CKD Stage 3-4)
+        // Exact Cox model: P = 1 - S_ave^exp(LP) where S_ave = 0.9528
+        // LP = 0.0655837773 * points - 6.1676482803
+        function calculateKPNW() {
+            const egfr = parseFloat(document.getElementById('kpnw-egfr').value);
+            const age = parseFloat(document.getElementById('kpnw-age').value);
+            const sex = document.getElementById('kpnw-sex').value;
+            const hgb = parseFloat(document.getElementById('kpnw-hgb').value);
+            const sbp = parseFloat(document.getElementById('kpnw-sbp').value);
+            const diabetes = document.getElementById('kpnw-diabetes').value;
+            const proteinuria = document.getElementById('kpnw-proteinuria').value;
+            const htnmed = document.getElementById('kpnw-htnmed').value;
+            const out = document.getElementById('kpnw-result');
+
+            if (!isFinite(egfr) || !isFinite(age) || sex === '' || !isFinite(hgb) ||
+                !isFinite(sbp) || diabetes === '' || proteinuria === '' || htnmed === '') {
+                out.innerHTML = '<div class="result-label">Complete all fields to calculate risk</div>';
+                document.getElementById('kpnw-egfr-pts').textContent = '';
+                document.getElementById('kpnw-age-pts').textContent = '';
+                document.getElementById('kpnw-hgb-pts').textContent = '';
+                document.getElementById('kpnw-sbp-pts').textContent = '';
+                return;
+            }
+
+            function egfrPts(g) {
+                if (g >= 55) return 0;
+                if (g >= 50) return 6;
+                if (g >= 45) return 13;
+                if (g >= 40) return 22;
+                if (g >= 35) return 33;
+                if (g >= 30) return 46;
+                if (g >= 25) return 59;
+                if (g >= 20) return 73;
+                return 86;
+            }
+            function agePts(a) {
+                if (a >= 85) return 0;
+                if (a >= 80) return 9;
+                if (a >= 75) return 16;
+                if (a >= 70) return 21;
+                if (a >= 65) return 23;
+                if (a >= 60) return 25;
+                if (a >= 55) return 28;
+                if (a >= 50) return 31;
+                if (a >= 45) return 33;
+                if (a >= 40) return 36;
+                if (a >= 35) return 39;
+                return 41;
+            }
+            function hgbPts(h) {
+                if (h >= 15.0) return 0;
+                if (h >= 14.0) return 2;
+                if (h >= 13.0) return 5;
+                if (h >= 12.0) return 7;
+                if (h >= 11.0) return 10;
+                if (h >= 10.0) return 12;
+                if (h >= 9.0) return 14;
+                if (h >= 8.0) return 17;
+                return 19;
+            }
+            function sbpPts(s) {
+                if (s < 120) return 0;
+                if (s < 125) return 1;
+                if (s < 130) return 3;
+                if (s < 135) return 4;
+                if (s < 140) return 5;
+                if (s < 145) return 7;
+                if (s < 150) return 8;
+                if (s < 155) return 10;
+                if (s < 160) return 11;
+                return 12;
+            }
+            function diabetesPts(d) {
+                return {0:0, 1:1, 2:7, 3:7, 4:10}[d] || 0;
+            }
+
+            const ptsEgfr = egfrPts(egfr);
+            const ptsAge = agePts(age);
+            const ptsHgb = hgbPts(hgb);
+            const ptsSbp = sbpPts(sbp);
+            const ptsDiab = diabetesPts(parseInt(diabetes));
+            const ptsMale = (parseInt(sex) === 1) ? 10 : 0;
+            const ptsProt = (parseInt(proteinuria) === 1) ? 7 : 0;
+            const ptsHtn = (parseInt(htnmed) === 1) ? 6 : 0;
+
+            const totalPts = ptsEgfr + ptsAge + ptsHgb + ptsSbp + ptsDiab + ptsMale + ptsProt + ptsHtn;
+
+            document.getElementById('kpnw-egfr-pts').textContent = '+' + ptsEgfr + ' pts';
+            document.getElementById('kpnw-age-pts').textContent = '+' + ptsAge + ' pts';
+            document.getElementById('kpnw-hgb-pts').textContent = '+' + ptsHgb + ' pts';
+            document.getElementById('kpnw-sbp-pts').textContent = '+' + ptsSbp + ' pts';
+
+            const S_AVE = 0.9528;
+            const lp = 0.0655837773 * totalPts - 6.1676482803;
+            const risk = 1 - Math.pow(S_AVE, Math.exp(lp));
+            const riskPct = risk * 100;
+
+            let category, color, desc;
+            if (riskPct < 1) {
+                category = 'Very Low Risk'; color = '#48bb78';
+                desc = 'Continue routine monitoring.';
+            } else if (riskPct < 5) {
+                category = 'Low Risk'; color = '#84cc16';
+                desc = 'Continue standard CKD management.';
+            } else if (riskPct < 15) {
+                category = 'Moderate Risk'; color = '#ed8936';
+                desc = 'Consider nephrology referral and closer monitoring.';
+            } else if (riskPct < 30) {
+                category = 'High Risk'; color = '#f56565';
+                desc = 'Nephrology referral recommended. Consider fistula planning.';
+            } else {
+                category = 'Very High Risk'; color = '#9b2c2c';
+                desc = 'Urgent nephrology evaluation. Dialysis access planning recommended.';
+            }
+
+            out.innerHTML = `
+                <div style="text-align:center;margin-bottom:12px;">
+                    <div style="font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;color:#718096;margin-bottom:4px;">5-Year Risk of RRT</div>
+                    <div style="font-size:2.4rem;font-weight:800;color:${color};">${riskPct.toFixed(1)}%</div>
+                    <div style="display:inline-block;padding:3px 12px;border-radius:20px;background:${color};color:white;font-size:0.85rem;font-weight:600;margin-top:4px;">${category}</div>
+                </div>
+                <div style="background:#edf2f7;padding:10px;border-radius:6px;margin-bottom:10px;">
+                    <div style="font-size:0.85rem;font-weight:600;color:#4a5568;margin-bottom:6px;">Risk Score: ${totalPts} points</div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:0.8rem;color:#4a5568;">
+                        <span>eGFR: +${ptsEgfr}</span><span>Age: +${ptsAge}</span>
+                        <span>Sex: +${ptsMale}</span><span>HGB: +${ptsHgb}</span>
+                        <span>SBP: +${ptsSbp}</span><span>Diabetes: +${ptsDiab}</span>
+                        <span>Proteinuria: +${ptsProt}</span><span>HTN Med: +${ptsHtn}</span>
+                    </div>
+                </div>
+                <div style="font-size:0.85rem;color:#4a5568;">${desc}</div>
+            `;
+        }
+
+        // ══════════════════════════════════════════════════
+        //  eGFR Slope Calculator
+        // ══════════════════════════════════════════════════
+
+        /**
+         * Calculate eGFR using CKD-EPI 2021 equation
+         * creatinine in mg/dL, age in years
+         */
+        function calcEGFR_CKDEPI2021(creatinineMgDl, age, gender) {
+            if (!creatinineMgDl || !age || !gender) return null;
+            if (creatinineMgDl <= 0 || age <= 0) return null;
+
+            let kappa, alpha;
+            if (gender === 'female') {
+                kappa = 0.7;
+                alpha = creatinineMgDl <= 0.7 ? -0.241 : -1.2;
+            } else {
+                kappa = 0.9;
+                alpha = creatinineMgDl <= 0.9 ? -0.302 : -1.2;
+            }
+
+            let eGFR = 142 *
+                Math.pow(Math.min(creatinineMgDl / kappa, 1), alpha) *
+                Math.pow(Math.max(creatinineMgDl / kappa, 1), -1.2) *
+                Math.pow(0.9938, age);
+
+            if (gender === 'female') {
+                eGFR *= 1.012;
+            }
+
+            return eGFR;
+        }
+
+        /**
+         * Get CKD stage color for chart
+         */
+        function getCKDStageColor(egfr) {
+            if (egfr >= 90) return '#48bb78';
+            if (egfr >= 60) return '#68d391';
+            if (egfr >= 45) return '#ed8936';
+            if (egfr >= 30) return '#f6ad55';
+            if (egfr >= 15) return '#f56565';
+            return '#9b2c2c';
+        }
+
+        /**
+         * Get CKD stage label
+         */
+        function getCKDStageLabel(egfr) {
+            if (egfr >= 90) return 'G1';
+            if (egfr >= 60) return 'G2';
+            if (egfr >= 45) return 'G3a';
+            if (egfr >= 30) return 'G3b';
+            if (egfr >= 15) return 'G4';
+            return 'G5';
+        }
+
+        /**
+         * Linear regression: returns {slope, intercept, r2}
+         * slope is in eGFR units per unit time
+         */
+        function linearRegression(points) {
+            // points: array of {x, y}
+            const n = points.length;
+            if (n < 2) return null;
+
+            let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0, sumY2 = 0;
+            for (const p of points) {
+                sumX += p.x;
+                sumY += p.y;
+                sumXY += p.x * p.y;
+                sumX2 += p.x * p.x;
+                sumY2 += p.y * p.y;
+            }
+
+            const denom = n * sumX2 - sumX * sumX;
+            if (Math.abs(denom) < 1e-12) return null;
+
+            const slope = (n * sumXY - sumX * sumY) / denom;
+            const intercept = (sumY * sumX2 - sumX * sumXY) / denom;
+
+            // R-squared
+            const ssTot = sumY2 - (sumY * sumY) / n;
+            const ssRes = sumY2 - intercept * sumY - slope * sumXY;
+            const r2 = ssTot > 0 ? 1 - (ssRes / ssTot) : 1;
+
+            return { slope, intercept, r2: Math.max(0, r2) };
+        }
+
+        /**
+         * Draw the eGFR slope chart on canvas
+         */
+        function drawSlopeChart(points, regression, timeLabels) {
+            const canvas = document.getElementById('slope-canvas');
+            if (!canvas) return;
+
+            // Handle DPI scaling
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+
+            const ctx = canvas.getContext('2d');
+            ctx.scale(dpr, dpr);
+
+            const w = rect.width;
+            const h = rect.height;
+            const pad = { top: 30, right: 30, bottom: 50, left: 55 };
+            const plotW = w - pad.left - pad.right;
+            const plotH = h - pad.top - pad.bottom;
+
+            // Clear
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = '#fafafa';
+            ctx.fillRect(0, 0, w, h);
+
+            if (points.length < 2) {
+                ctx.fillStyle = '#a0aec0';
+                ctx.font = '14px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('Enter at least 2 data points to display the chart', w / 2, h / 2);
+                return;
+            }
+
+            // Determine scales
+            const xMin = points[0].x;
+            const xMax = points[points.length - 1].x;
+            const xRange = xMax - xMin || 1;
+
+            let yMin = Infinity, yMax = -Infinity;
+            for (const p of points) {
+                yMin = Math.min(yMin, p.y);
+                yMax = Math.max(yMax, p.y);
+            }
+            // Include regression line in Y range
+            if (regression) {
+                for (const p of points) {
+                    const yPred = regression.intercept + regression.slope * p.x;
+                    yMin = Math.min(yMin, yPred);
+                    yMax = Math.max(yMax, yPred);
+                }
+            }
+            const yPad = (yMax - yMin) * 0.15 || 5;
+            yMin = Math.max(0, yMin - yPad);
+            yMax += yPad;
+
+            // Helper: transform data to canvas coords
+            const toCX = (x) => pad.left + ((x - xMin) / xRange) * plotW;
+            const toCY = (y) => pad.top + plotH - ((y - yMin) / (yMax - yMin)) * plotH;
+
+            // Draw grid lines
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 1;
+
+            // Horizontal grid (Y-axis)
+            const yStep = Math.pow(10, Math.floor(Math.log10(yMax - yMin)));
+            let yStart = Math.floor(yMin / yStep) * yStep;
+            for (let y = yStart; y <= yMax; y += yStep) {
+                if (y < yMin) continue;
+                const cy = toCY(y);
+                ctx.beginPath();
+                ctx.moveTo(pad.left, cy);
+                ctx.lineTo(w - pad.right, cy);
+                ctx.stroke();
+
+                // Y labels
+                ctx.fillStyle = '#718096';
+                ctx.font = '11px sans-serif';
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(Math.round(y), pad.left - 8, cy);
+            }
+
+            // Vertical grid (X-axis) - one per data point
+            for (let i = 0; i < points.length; i++) {
+                const cx = toCX(points[i].x);
+                ctx.beginPath();
+                ctx.moveTo(cx, pad.top);
+                ctx.lineTo(cx, h - pad.bottom);
+                ctx.stroke();
+
+                // X labels (date)
+                ctx.fillStyle = '#4a5568';
+                ctx.font = '10px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'top';
+                const label = timeLabels[i] || '';
+                // Rotate text for readability
+                ctx.save();
+                ctx.translate(cx, h - pad.bottom + 10);
+                ctx.rotate(-Math.PI / 6);
+                ctx.fillText(label, 0, 0);
+                ctx.restore();
+            }
+
+            // Draw axes
+            ctx.strokeStyle = '#4a5568';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(pad.left, pad.top);
+            ctx.lineTo(pad.left, h - pad.bottom);
+            ctx.lineTo(w - pad.right, h - pad.bottom);
+            ctx.stroke();
+
+            // Axis labels
+            ctx.fillStyle = '#2d3748';
+            ctx.font = 'bold 12px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            ctx.fillText('Time', pad.left + plotW / 2, h - 15);
+
+            ctx.save();
+            ctx.translate(12, pad.top + plotH / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            ctx.fillText('eGFR (mL/min/1.73m²)', 0, 0);
+            ctx.restore();
+
+            // Draw regression line
+            if (regression) {
+                ctx.strokeStyle = '#5a67d8';
+                ctx.lineWidth = 2.5;
+                ctx.setLineDash([6, 3]);
+                ctx.beginPath();
+                ctx.moveTo(toCX(xMin), toCY(regression.intercept + regression.slope * xMin));
+                ctx.lineTo(toCX(xMax), toCY(regression.intercept + regression.slope * xMax));
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Annotation on regression line
+                const midX = (xMin + xMax) / 2;
+                const midY = regression.intercept + regression.slope * midX;
+                const annCy = toCY(midY);
+                const slopePerYear = regression.slope;
+                const sign = slopePerYear >= 0 ? '+' : '';
+                ctx.fillStyle = '#5a67d8';
+                ctx.font = 'bold 11px sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText(`Slope: ${sign}${slopePerYear.toFixed(2)}`, toCX(midX) + 8, annCy - 12);
+            }
+
+            // Draw data points
+            for (let i = 0; i < points.length; i++) {
+                const p = points[i];
+                const cx = toCX(p.x);
+                const cy = toCY(p.y);
+                const color = getCKDStageColor(p.y);
+
+                // Point shadow
+                ctx.fillStyle = 'rgba(0,0,0,0.1)';
+                ctx.beginPath();
+                ctx.arc(cx + 1, cy + 1, 6, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Point
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(cx, cy, 6, 0, Math.PI * 2);
+                ctx.fill();
+
+                // White border
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // eGFR value label above point
+                ctx.fillStyle = '#2d3748';
+                ctx.font = 'bold 10px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText(p.y.toFixed(1), cx, cy - 10);
+            }
+        }
+
+        /**
+         * Main eGFR Slope Calculator function
+         */
+        function calculateSlope() {
+            const age = parseFloat(document.getElementById('slope-age').value);
+            const gender = document.getElementById('slope-gender').value;
+            const unitMode = document.querySelector('input[name="slope-unit"]:checked').value;
+            const isUmol = unitMode === 'umol';
+
+            // Update unit hint
+            document.getElementById('slope-unit-hint').textContent = isUmol ? 'Using μmol/L (÷ 88.4 for CKD-EPI)' : 'Using mg/dL';
+            document.getElementById('slope-th-unit').textContent = isUmol ? '(μmol/L)' : '(mg/dL)';
+
+            // Collect data points
+            const points = [];
+            const timeLabels = [];
+
+            for (let i = 1; i <= 7; i++) {
+                const monthEl = document.getElementById(`slope-month-${i}`);
+                const yearEl = document.getElementById(`slope-year-${i}`);
+                const crEl = document.getElementById(`slope-cr-${i}`);
+                const egfrCell = document.getElementById(`slope-egfr-${i}`);
+
+                const month = monthEl ? parseInt(monthEl.value) : NaN;
+                const year = yearEl ? parseFloat(yearEl.value) : NaN;
+                let cr = crEl ? parseFloat(crEl.value) : NaN;
+
+                // Validate
+                if (!month || !year || isNaN(cr) || cr <= 0 || !age || !gender) {
+                    if (egfrCell) egfrCell.textContent = '--';
+                    continue;
+                }
+
+                // Convert creatinine to mg/dL if needed
+                let crMgDl = cr;
+                if (isUmol) {
+                    crMgDl = cr / 88.4;
+                }
+
+                // Calculate eGFR
+                const egfr = calcEGFR_CKDEPI2021(crMgDl, age, gender);
+                if (egfrCell) {
+                    egfrCell.textContent = egfr ? egfr.toFixed(1) : '--';
+                    egfrCell.style.color = egfr ? getCKDStageColor(egfr) : '#718096';
+                }
+
+                if (!egfr || !isFinite(egfr)) continue;
+
+                // Time in years (decimal)
+                const timeDecimal = year + (month - 1) / 12;
+                points.push({ x: timeDecimal, y: egfr, month, year, index: i });
+            }
+
+            // Sort by time
+            points.sort((a, b) => a.x - b.x);
+
+            // Build time labels
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            for (const p of points) {
+                timeLabels.push(`${monthNames[p.month - 1]} ${Math.round(p.year)}`);
+            }
+
+            // Update summary
+            const slopeVal = document.getElementById('slope-val');
+            const r2Val = document.getElementById('slope-r2');
+            const nVal = document.getElementById('slope-n');
+            const firstEgfrVal = document.getElementById('slope-first-egfr');
+            const lastEgfrVal = document.getElementById('slope-last-egfr');
+            const interpDiv = document.getElementById('slope-interpretation');
+
+            if (points.length < 2) {
+                slopeVal.textContent = '--';
+                slopeVal.style.color = '#5a67d8';
+                r2Val.textContent = '--';
+                nVal.textContent = points.length > 0 ? points.length : '--';
+                firstEgfrVal.textContent = points.length > 0 ? points[0].y.toFixed(1) : '--';
+                lastEgfrVal.textContent = points.length > 0 ? points[points.length - 1].y.toFixed(1) : '--';
+                interpDiv.style.display = 'none';
+
+                // Draw empty chart
+                drawSlopeChart([], null, []);
+                return;
+            }
+
+            // Calculate linear regression
+            const regression = linearRegression(points);
+            const slope = regression ? regression.slope : 0;
+            const r2 = regression ? regression.r2 : 0;
+
+            // Update UI values
+            const sign = slope >= 0 ? '+' : '';
+            slopeVal.textContent = `${sign}${slope.toFixed(2)}`;
+            r2Val.textContent = r2.toFixed(3);
+            nVal.textContent = points.length;
+            firstEgfrVal.textContent = points[0].y.toFixed(1);
+            lastEgfrVal.textContent = points[points.length - 1].y.toFixed(1);
+
+            // Color-code the slope value
+            if (slope >= -1 && slope <= 1) slopeVal.style.color = '#48bb78';
+            else if (slope > 1) slopeVal.style.color = '#4299e1';
+            else if (slope >= -3) slopeVal.style.color = '#ed8936';
+            else if (slope >= -5) slopeVal.style.color = '#f56565';
+            else slopeVal.style.color = '#9b2c2c';
+
+            // Interpretation
+            let interpHTML = '';
+            let interpClass = '';
+
+            if (slope >= -1 && slope <= 1) {
+                interpClass = 'stable';
+                interpHTML = `<strong>Stable kidney function</strong> (${sign}${slope.toFixed(2)} mL/min/1.73m²/year). `;
+                interpHTML += 'The eGFR is essentially unchanged over the follow-up period. Continue routine monitoring.';
+            } else if (slope > 1) {
+                interpClass = 'recovery';
+                interpHTML = `<strong>Improving kidney function</strong> (+${slope.toFixed(2)} mL/min/1.73m²/year). `;
+                interpHTML += 'The eGFR is increasing, suggesting recovery or response to treatment.';
+            } else if (slope >= -3) {
+                interpClass = 'slow';
+                interpHTML = `<strong>Slow decline</strong> (${slope.toFixed(2)} mL/min/1.73m²/year). `;
+                interpHTML += 'This represents a moderate rate of kidney function loss. Risk factor modification and nephrology follow-up are recommended.';
+            } else if (slope >= -5) {
+                interpClass = 'rapid';
+                interpHTML = `<strong>Rapid decline</strong> (${slope.toFixed(2)} mL/min/1.73m²/year). `;
+                interpHTML += 'This is consistent with a rapid decliner phenotype. Active intervention and close nephrology monitoring are strongly recommended.';
+            } else {
+                interpClass = 'rapid';
+                interpHTML = `<strong>Very rapid decline</strong> (${slope.toFixed(2)} mL/min/1.73m²/year). `;
+                interpHTML += 'This aggressive rate of kidney function loss warrants urgent nephrology evaluation and aggressive risk factor management.';
+            }
+
+            // Add projected time to ESKD (eGFR 15) if declining
+            if (slope < 0) {
+                const lastEgfr = points[points.length - 1].y;
+                const yearsToESKD = (15 - lastEgfr) / slope;
+                if (yearsToESKD > 0 && yearsToESKD < 50) {
+                    interpHTML += `<br><br><strong>Projected time to ESKD (eGFR 15):</strong> ~${yearsToESKD.toFixed(1)} years from last measurement.`;
+                }
+            }
+
+            // Add R2 note
+            if (r2 < 0.5) {
+                interpHTML += '<br><br><em>Note: Low R² value suggests high variability in measurements. Consider obtaining more frequent or consistent eGFR readings for a more reliable slope estimate.</em>';
+            }
+
+            interpDiv.className = 'slope-interpretation ' + interpClass;
+            interpDiv.innerHTML = interpHTML;
+            interpDiv.style.display = 'block';
+
+            // Draw chart
+            drawSlopeChart(points, regression, timeLabels);
+        }
+
+        // Redraw chart on window resize
+        window.addEventListener('resize', function() {
+            calculateSlope();
+        });
+
+    
+        // ── Drawz et al., 2013 — VA Risk Score ────────────────────────
+        function calculateDrawzVA() {
+            const egfr = parseFloat(document.getElementById('drawz-egfr').value);
+            const chf = parseInt(document.getElementById('drawz-chf').value);
+            const age = parseFloat(document.getElementById('drawz-age').value);
+            const albumin = parseFloat(document.getElementById('drawz-albumin').value);
+            const potassium = parseFloat(document.getElementById('drawz-potassium').value);
+            const sbp = parseFloat(document.getElementById('drawz-sbp').value);
+            const out = document.getElementById('drawz-result');
+
+            if (!isFinite(egfr) || !isFinite(age) || !isFinite(albumin) || !isFinite(potassium) || !isFinite(sbp)) {
+                out.innerHTML = ''; return;
+            }
+
+            const L = 2.373310 + 0.2334318 * egfr - 2.108974 * chf + 0.09131896 * age - 0.7468557 * albumin - 0.4961119 * potassium + 0.01726844 * sbp + 0.1402834 * egfr * chf - 0.006568763 * egfr * age;
+            const risk = 1 - Math.pow(0.983, Math.exp(L));
+            const pct = risk * 100;
+
+            let category = '', colorClass = '';
+            if (pct < 0.7) { category = 'Low risk (lowest tertile)'; colorClass = 'result-low-inline'; }
+            else if (pct <= 2.9) { category = 'Moderate risk (middle tertile)'; colorClass = 'result-score-big'; }
+            else if (pct <= 5.6) { category = 'High risk (highest tertile)'; colorClass = 'result-high-inline'; }
+            else { category = 'Very high risk (top quintile)'; colorClass = 'result-high-inline'; }
+
+            out.innerHTML = `<div class="result-value">1-Year ESRD Risk: <strong>${pct.toFixed(2)}%</strong></div>
+                <div class="result-card-inline ${colorClass}"><div class="result-score-big">${category}</div></div>`;
+        }
+
+        // ── Marks et al., 2015 — RRT Prediction ───────────────────────
+        function calculateMarksRRT() {
+            const sex = document.getElementById('marks-sex').value;
+            const age = parseFloat(document.getElementById('marks-age').value);
+            const egfr = parseFloat(document.getElementById('marks-egfr').value);
+            const albuminuria = document.getElementById('marks-albuminuria').value;
+            const out = document.getElementById('marks-result');
+
+            if (!sex || !isFinite(age) || !isFinite(egfr) || !albuminuria) {
+                out.innerHTML = ''; return;
+            }
+
+            const sexValue = sex === 'male' ? 1 : 2;
+            let albuminuriaOffset = 0;
+            if (albuminuria === 'micro') albuminuriaOffset = 0.772;
+            else if (albuminuria === 'macro') albuminuriaOffset = 1.670;
+
+            const Lp = 8.090 - 1.031 * sexValue - 0.761 * (age / 10) - 0.175 * egfr + albuminuriaOffset;
+            const P = 1 / (1 + Math.exp(-Lp));
+            const pct = P * 100;
+
+            let category = '', colorClass = '';
+            if (pct < 1) { category = 'Low risk'; colorClass = 'result-low-inline'; }
+            else if (pct < 5) { category = 'Moderate risk'; colorClass = 'result-score-big'; }
+            else if (pct < 10) { category = 'High risk'; colorClass = 'result-high-inline'; }
+            else { category = 'Very high risk'; colorClass = 'result-high-inline'; }
+
+            out.innerHTML = `<div class="result-value">5-Year RRT Risk: <strong>${pct.toFixed(1)}%</strong></div>
+                <div class="result-card-inline ${colorClass}"><div class="result-score-big">${category}</div></div>`;
+        }
+
+        // ── Johnson et al., 2008 — Points-Based Risk Score ────────────
+        function calculateJohnsonRisk() {
+            const ageRange = document.getElementById('johnson-age').value;
+            const sex = document.getElementById('johnson-sex').value;
+            const diabetes = document.getElementById('johnson-diabetes').value;
+            const hypertension = document.getElementById('johnson-hypertension').value;
+            const egfrRange = document.getElementById('johnson-egfr').value;
+            const anemia = document.getElementById('johnson-anemia').value;
+            const out = document.getElementById('johnson-result');
+
+            if (!ageRange || !sex || !diabetes || !hypertension || !egfrRange || !anemia) {
+                out.innerHTML = ''; return;
+            }
+
+            const agePoints = { '30-34':64, '35-39':62, '40-44':60, '45-49':58, '50-54':56, '55-59':54, '60-64':51, '65-69':46, '70-74':41, '75-79':34, '80-84':19, '85-89':0 };
+            const sexPoints = { female: 0, male: 16 };
+            const diabetesPoints = { no: 0, yes: 17 };
+            const hypertensionPoints = { no: 0, yes: 42 };
+            const egfrPoints = { '59-55':0, '54-50':15, '49-45':17, '44-40':22, '39-35':32, '34-30':44, '29-25':58, '24-20':72, '19-15':86 };
+            const anemiaPoints = { no: 0, yes: 11 };
+
+            const pts = {
+                age: agePoints[ageRange] || 0,
+                sex: sexPoints[sex] || 0,
+                diabetes: diabetesPoints[diabetes] || 0,
+                hypertension: hypertensionPoints[hypertension] || 0,
+                egfr: egfrPoints[egfrRange] || 0,
+                anemia: anemiaPoints[anemia] || 0
+            };
+
+            const total = pts.age + pts.sex + pts.diabetes + pts.hypertension + pts.egfr + pts.anemia;
+
+            let riskLabel = '<1%';
+            if (total >= 165) riskLabel = '≥20%';
+            else if (total >= 159) riskLabel = '≥15%';
+            else if (total >= 146) riskLabel = '≥10%';
+            else if (total >= 131) riskLabel = '≥5%';
+            else if (total >= 98) riskLabel = '≥1%';
+
+            let colorClass = 'result-low-inline';
+            if (total >= 159) colorClass = 'result-high-inline';
+            else if (total >= 131) colorClass = 'result-score-big';
+
+            out.innerHTML = `<div style="text-align:center;">
+                <div style="font-size:2.5rem;font-weight:800;color:#5a67d8;">${total} points</div>
+                <div style="font-size:1.1rem;margin-top:4px;">Predicted 5-year RRT risk: <strong>${riskLabel}</strong></div>
+                </div>
+                <div style="margin-top:10px;font-size:13px;color:#4a5568;">
+                <table style="width:100%;font-size:13px;">
+                    <tr><td>Age</td><td style="text-align:right;">${pts.age} pts</td></tr>
+                    <tr><td>Sex</td><td style="text-align:right;">${pts.sex} pts</td></tr>
+                    <tr><td>Diabetes</td><td style="text-align:right;">${pts.diabetes} pts</td></tr>
+                    <tr><td>Hypertension</td><td style="text-align:right;">${pts.hypertension} pts</td></tr>
+                    <tr><td>eGFR</td><td style="text-align:right;">${pts.egfr} pts</td></tr>
+                    <tr><td>Anemia</td><td style="text-align:right;">${pts.anemia} pts</td></tr>
+                </table>
+                </div>`;
+        }
+</script>
 </body>
 </html>
