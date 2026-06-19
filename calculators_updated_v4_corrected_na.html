@@ -487,6 +487,13 @@
 </div>
 
 <script>
+        function getBMI(heightCm, weightKg) {
+            if (isFinite(heightCm) && heightCm > 0 && isFinite(weightKg) && weightKg > 0) {
+                return weightKg / Math.pow(heightCm / 100, 2);
+            }
+            return NaN;
+        }
+
 /* ----------  BMI + full BSA engine  ---------- */
 function calcBMIandBSA() {
     const h = parseFloat(document.getElementById('bsa-height').value);
@@ -497,8 +504,7 @@ function calcBMIandBSA() {
 
     if (!h || !w) { out.innerHTML = ''; return; }
 
-    const hM = h / 100;
-    const bmi = w / (hM * hM);
+    const bmi = getBMI(h, w);
     const log10 = x => Math.log10(x);
     const pow = Math.pow;
 
@@ -1857,7 +1863,7 @@ function calcBMIandBSA() {
 
                 // 5) Spot-urine sodium estimation formulas (optional)
                 const canDoAnthro = (isFinite(age) && age > 0 && isFinite(weight) && weight > 0 && isFinite(height) && height > 0);
-                const BMI = (isFinite(weight) && isFinite(height) && height > 0) ? (weight / Math.pow(height/100, 2)) : NaN;
+                const BMI = getBMI(height, weight);
 
                 const mmolNa_to_mgNa = (mmol) => mmol * 23.0;
                 const mmolNa_to_gNaCl = (mmol) => (mmol * 58.44) / 1000.0;
@@ -3211,8 +3217,7 @@ function calcBMIandBSA() {
                 return;
             }
             
-            const heightM = height / 100;
-            const bmi = weight / (heightM * heightM);
+            const bmi = getBMI(height, weight);
             let category = '';
             let statusClass = '';
             
@@ -4936,7 +4941,7 @@ function calculateBPStage() {
             const clinCVD = cb('ckm-chd') || cb('ckm-hf') || cb('ckm-stroke') || cb('ckm-pad') || cb('ckm-afib');
             const cac = gv('ckm-cac'), smoke = document.getElementById('ckm-smoking').value;
             // BMI
-            const bmi = (ht && wt) ? wt / Math.pow(ht/100, 2) : null;
+            const bmi = (ht && wt) ? getBMI(ht, wt) : null;
             // eGFR CKD-EPI 2021
             let eGFR = null;
             if (scr && age && sex) {
