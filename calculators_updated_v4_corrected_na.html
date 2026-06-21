@@ -570,13 +570,15 @@ function calcBMIandBSA() {
     html += `<div style="margin-top:12px;font-size:14px;color:#4a5568;">
                 <strong>All formulas (m²):</strong><br>
                 <table style="width:100%;font-size:13px;">`;
+
+    const rows = [];
     for (const key in lib) {
         const v = lib[key];
         if (!isFinite(v)) continue;
         const name = key.replace('-',' ');
-        html += `<tr><td style="padding:1px 4px;">${name}</td><td style="text-align:right;">${v.toFixed(2)}</td></tr>`;
+        rows.push(`<tr><td style="padding:1px 4px;">${name}</td><td style="text-align:right;">${v.toFixed(2)}</td></tr>`);
     }
-    html += `</table></div>`;
+    html += rows.join('') + `</table></div>`;
 
     out.innerHTML = html;
 }
