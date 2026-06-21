@@ -839,38 +839,54 @@ function calcBMIandBSA() {
                 
                 <!-- Calcium Converter -->
                 <div class="section-divider">
-                    <h3>Calcium: mmol/L → mg/dL</h3>
+                    <h3>Calcium Converter</h3>
                     <div class="input-group">
-                        <input type="number" id="calcium-mmol" placeholder="Calcium in mmol/L" step="0.01" oninput="convertCalcium()">
+                        <label>Calcium (mg/dL)</label>
+                        <input type="number" id="conv-ca-mg" step="0.1" oninput="convertCalcium()">
                     </div>
-                    <div class="result" id="calcium-result"></div>
+                    <div class="input-group">
+                        <label>Calcium (mmol/L)</label>
+                        <input type="number" id="conv-ca-mmol" step="0.01" oninput="convertCalcium()">
+                    </div>
                 </div>
 
                 <!-- Phosphorus Converter -->
                 <div class="section-divider">
-                    <h3>Phosphorus: mmol/L → mg/dL</h3>
+                    <h3>Phosphorus Converter</h3>
                     <div class="input-group">
-                        <input type="number" id="phosphorus-mmol" placeholder="Phosphorus in mmol/L" step="0.01" oninput="convertPhosphorus()">
+                        <label>Phosphorus (mg/dL)</label>
+                        <input type="number" id="conv-p-mg" step="0.1" oninput="convertPhosphorus()">
                     </div>
-                    <div class="result" id="phosphorus-result"></div>
+                    <div class="input-group">
+                        <label>Phosphorus (mmol/L)</label>
+                        <input type="number" id="conv-p-mmol" step="0.01" oninput="convertPhosphorus()">
+                    </div>
                 </div>
 
                 <!-- Creatinine Converter -->
                 <div class="section-divider">
-                    <h3>Creatinine: μmol/L → mg/dL</h3>
+                    <h3>Creatinine Converter</h3>
                     <div class="input-group">
-                        <input type="number" id="creatinine-umol" placeholder="Creatinine in μmol/L" step="0.1" oninput="convertCreatinine()">
+                        <label>Creatinine (mg/dL)</label>
+                        <input type="number" id="conv-cr-mg" step="0.01" oninput="convertCreatinine()">
                     </div>
-                    <div class="result" id="creatinine-result"></div>
+                    <div class="input-group">
+                        <label>Creatinine (µmol/L)</label>
+                        <input type="number" id="conv-cr-umol" step="1" oninput="convertCreatinine()">
+                    </div>
                 </div>
 
                 <!-- PTH Converter -->
                 <div class="section-divider">
-                    <h3>PTH: pmol/L → pg/mL</h3>
+                    <h3>PTH Converter</h3>
                     <div class="input-group">
-                        <input type="number" id="pth-pmol" placeholder="PTH in pmol/L" step="0.1" oninput="convertPTH()">
+                        <label>PTH (pg/mL)</label>
+                        <input type="number" id="conv-pth-pg" step="1" oninput="convertPTH()">
                     </div>
-                    <div class="result" id="pth-result"></div>
+                    <div class="input-group">
+                        <label>PTH (pmol/L)</label>
+                        <input type="number" id="conv-pth-pmol" step="0.1" oninput="convertPTH()">
+                    </div>
                 </div>
             </div>
 
@@ -3611,55 +3627,55 @@ function calculateBPStage() {
 
         // Unit Converters
         function convertCalcium() {
-            const calcium = parseFloat(document.getElementById('calcium-mmol').value);
-            const resultDiv = document.getElementById('calcium-result');
-            
-            if (!calcium) {
-                resultDiv.innerHTML = '';
-                return;
+            const mgdl = document.getElementById('conv-ca-mg');
+            const mmol = document.getElementById('conv-ca-mmol');
+            if (document.activeElement === mgdl && mgdl.value) {
+                mmol.value = (parseFloat(mgdl.value) / 4).toFixed(2);
+            } else if (document.activeElement === mmol && mmol.value) {
+                mgdl.value = (parseFloat(mmol.value) * 4).toFixed(2);
             }
-            
-            const calciumMgDl = calcium * 4.008;
-            resultDiv.innerHTML = `<div class="result-value">${calciumMgDl.toFixed(2)} mg/dL</div>`;
+            if (!mgdl.value && !mmol.value) {
+                mgdl.value = ''; mmol.value = '';
+            }
         }
 
         function convertPhosphorus() {
-            const phosphorus = parseFloat(document.getElementById('phosphorus-mmol').value);
-            const resultDiv = document.getElementById('phosphorus-result');
-            
-            if (!phosphorus) {
-                resultDiv.innerHTML = '';
-                return;
+            const mgdl = document.getElementById('conv-p-mg');
+            const mmol = document.getElementById('conv-p-mmol');
+            if (document.activeElement === mgdl && mgdl.value) {
+                mmol.value = (parseFloat(mgdl.value) / 3.1).toFixed(2);
+            } else if (document.activeElement === mmol && mmol.value) {
+                mgdl.value = (parseFloat(mmol.value) * 3.1).toFixed(2);
             }
-            
-            const phosphorusMgDl = phosphorus * 3.097;
-            resultDiv.innerHTML = `<div class="result-value">${phosphorusMgDl.toFixed(2)} mg/dL</div>`;
+            if (!mgdl.value && !mmol.value) {
+                mgdl.value = ''; mmol.value = '';
+            }
         }
 
         function convertCreatinine() {
-            const creatinine = parseFloat(document.getElementById('creatinine-umol').value);
-            const resultDiv = document.getElementById('creatinine-result');
-            
-            if (!creatinine) {
-                resultDiv.innerHTML = '';
-                return;
+            const mgdl = document.getElementById('conv-cr-mg');
+            const umol = document.getElementById('conv-cr-umol');
+            if (document.activeElement === mgdl && mgdl.value) {
+                umol.value = (parseFloat(mgdl.value) * 88.4).toFixed(0);
+            } else if (document.activeElement === umol && umol.value) {
+                mgdl.value = (parseFloat(umol.value) / 88.4).toFixed(2);
             }
-            
-            const creatinineMgDl = creatinine / 88.42;
-            resultDiv.innerHTML = `<div class="result-value">${creatinineMgDl.toFixed(2)} mg/dL</div>`;
+            if (!mgdl.value && !umol.value) {
+                mgdl.value = ''; umol.value = '';
+            }
         }
 
         function convertPTH() {
-            const pth = parseFloat(document.getElementById('pth-pmol').value);
-            const resultDiv = document.getElementById('pth-result');
-            
-            if (!pth) {
-                resultDiv.innerHTML = '';
-                return;
+            const pgml = document.getElementById('conv-pth-pg');
+            const pmol = document.getElementById('conv-pth-pmol');
+            if (document.activeElement === pgml && pgml.value) {
+                pmol.value = (parseFloat(pgml.value) / 9.4).toFixed(1);
+            } else if (document.activeElement === pmol && pmol.value) {
+                pgml.value = (parseFloat(pmol.value) * 9.4).toFixed(0);
             }
-            
-            const pthPgMl = pth * 9.43;
-            resultDiv.innerHTML = `<div class="result-value">${pthPgMl.toFixed(1)} pg/mL</div>`;
+            if (!pgml.value && !pmol.value) {
+                pgml.value = ''; pmol.value = '';
+            }
         }
 
         // Corrected Calcium & Ca×P Product
