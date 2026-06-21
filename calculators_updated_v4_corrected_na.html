@@ -5385,16 +5385,20 @@ function calculateBPStage() {
             const xRange = xMax - xMin || 1;
 
             let yMin = Infinity, yMax = -Infinity;
-            for (const p of points) {
-                yMin = Math.min(yMin, p.y);
-                yMax = Math.max(yMax, p.y);
-            }
-            // Include regression line in Y range
             if (regression) {
-                for (const p of points) {
+                for (let i = 0; i < points.length; i++) {
+                    const p = points[i];
                     const yPred = regression.intercept + regression.slope * p.x;
-                    yMin = Math.min(yMin, yPred);
-                    yMax = Math.max(yMax, yPred);
+                    if (p.y < yMin) yMin = p.y;
+                    if (p.y > yMax) yMax = p.y;
+                    if (yPred < yMin) yMin = yPred;
+                    if (yPred > yMax) yMax = yPred;
+                }
+            } else {
+                for (let i = 0; i < points.length; i++) {
+                    const p = points[i];
+                    if (p.y < yMin) yMin = p.y;
+                    if (p.y > yMax) yMax = p.y;
                 }
             }
             const yPad = (yMax - yMin) * 0.15 || 5;
