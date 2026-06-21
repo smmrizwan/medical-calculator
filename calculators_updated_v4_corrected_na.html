@@ -4974,9 +4974,9 @@ function calculateBPStage() {
             const kf     = eGFR !== null && eGFR < 15;
             let stage = 0, stageDisp = '0', stageName = 'No CKM Risk Factors';
             if (clinCVD)               { stage=4; stageDisp=kf?'4b':'4a'; stageName='Clinical CVD'+(kf?' with Kidney Failure':''); }
-            else if (s3sub||s3risk||s3ckd) { stage=3; stageName='Subclinical CVD / High Risk'; }
-            else if (s2tg||s2bp||isDiab||mets||ckd) { stage=2; stageName='Metabolic Risk Factors or CKD'; }
-            else if (s1bmi||s1wst||s1glc||s1hba1) { stage=1; stageName='Excess Adiposity / Prediabetes'; }
+            else if (s3sub||s3risk||s3ckd) { stage=3; stageDisp='3'; stageName='Subclinical CVD / High Risk'; }
+            else if (s2tg||s2bp||isDiab||mets||ckd) { stage=2; stageDisp='2'; stageName='Metabolic Risk Factors or CKD'; }
+            else if (s1bmi||s1wst||s1glc||s1hba1) { stage=1; stageDisp='1'; stageName='Excess Adiposity / Prediabetes'; }
             // LE lookup
             let ds = ckmLE.total;
             if (race==='white') ds=ckmLE.white; else if(race==='black') ds=ckmLE.black;
