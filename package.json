@@ -1,0 +1,24 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "This repository contains a collection of clinical medical calculators designed for quick and easy reference, with a particular focus on nephrology, fluid/electrolytes, and critical care.",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smmrizwan/medical-calculator.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/smmrizwan/medical-calculator/issues"
+  },
+  "homepage": "https://github.com/smmrizwan/medical-calculator#readme",
+  "devDependencies": {
+    "jest": "^30.4.2"
+  }
+}
