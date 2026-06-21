@@ -5545,7 +5545,6 @@ function calculateBPStage() {
 
             // Collect data points
             const points = [];
-            const timeLabels = [];
 
             for (let i = 1; i <= 7; i++) {
                 const monthEl = document.getElementById(`slope-month-${i}`);
@@ -5588,9 +5587,7 @@ function calculateBPStage() {
 
             // Build time labels
             const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-            for (const p of points) {
-                timeLabels.push(`${monthNames[p.month - 1]} ${Math.round(p.year)}`);
-            }
+            const timeLabels = points.map(p => `${monthNames[p.month - 1]} ${Math.round(p.year)}`);
 
             // Update summary
             const slopeVal = document.getElementById('slope-val');
