@@ -3932,8 +3932,10 @@ function calculateBPStage() {
         }
         
         // AKI Timeline Tracker Functions
-        function calculateTimelineRow(rowNum) {
-            const baseline   = parseFloat(document.getElementById('timeline-baseline').value);
+        function calculateTimelineRow(rowNum, baseline = null) {
+            if (baseline === null) {
+                baseline = parseFloat(document.getElementById('timeline-baseline').value);
+            }
             const currentCr  = parseFloat(document.getElementById(`cr-${rowNum}`).value);
             const changeDiv  = document.getElementById(`change-${rowNum}`);
             const commentDiv = document.getElementById(`comment-${rowNum}`);
@@ -3977,8 +3979,9 @@ function calculateBPStage() {
         }
 
         function updateAllTimelineRows() {
+            const baseline = parseFloat(document.getElementById('timeline-baseline').value);
             for (let i = 1; i <= 8; i++) {
-                if (document.getElementById(`cr-${i}`).value) calculateTimelineRow(i);
+                if (document.getElementById(`cr-${i}`).value) calculateTimelineRow(i, baseline);
             }
         }
 
