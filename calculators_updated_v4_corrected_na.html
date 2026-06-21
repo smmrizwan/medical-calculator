@@ -5301,18 +5301,6 @@ function calculateBPStage() {
         }
 
         /**
-         * Get CKD stage label
-         */
-        function getCKDStageLabel(egfr) {
-            if (egfr >= 90) return 'G1';
-            if (egfr >= 60) return 'G2';
-            if (egfr >= 45) return 'G3a';
-            if (egfr >= 30) return 'G3b';
-            if (egfr >= 15) return 'G4';
-            return 'G5';
-        }
-
-        /**
          * Linear regression: returns {slope, intercept, r2}
          * slope is in eGFR units per unit time
          */
